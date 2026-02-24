@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="vi" class="js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>INFIMITY</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-body-family: 'Figtree', sans-serif;
+      --font-heading-family: 'Cardo', serif;
+      --font-body-weight: 500;
+      --font-heading-weight: 400;
+      --font-body-scale: 1.1;
+
+      --color-background: 245,245,245;
+      --color-foreground: 31,31,33;
+      --color-link: 23,115,176;
+      --color-accent: 23,115,176;
+
+      --page-width: 140rem;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+    html { font-size: calc(var(--font-body-scale) * 62.5%); }
+    body {
+      font-family: var(--font-body-family);
+      background: rgb(var(--color-background));
+      color: rgb(var(--color-foreground));
+      line-height: 1.5;
+      font-weight: var(--font-body-weight);
+      overflow-x: hidden;
+    }
+
+    .page-width { max-width: var(--page-width); margin: 0 auto; padding: 0 2rem; }
+
+    .header-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      max-width: 1600px;
+      margin: 0 auto;
+      height: 100px;
+    }
+
+    .header__logo-img {
+      height: 48px;
+      width: auto;
+    }
+
+    .header__nav {
+      display: flex;
+      gap: 50px;
+    }
+
+    .header__nav a {
+      color: #000;
+      text-decoration: none;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+
+    .header__nav a:hover,
+    .header__nav a.active {
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .header__nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #000;
+      transition: width 0.3s ease;
+    }
+
+    .header__nav a:hover::after,
+    .header__nav a.active::after {
+      width: 100%;
+    }
+
+    .header__icons {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .header__icon {
+      color: #000;
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .header__icon:hover {
+      transform: scale(1.15);
+    }
+
+    .header__icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .announcement-bar {
+      background: #f5f5f5;
+      color: #000;
+      text-align: center;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .poster-banner {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .poster-container {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .image-with-text,
+    .vmcv-section,
+    .product-grid {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+    }
+
+    .image-with-text.visible,
+    .vmcv-section.visible,
+    .product-grid.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .product-grid .card {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .product-grid .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .image-with-text {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      padding: 6rem 0;
+    }
+
+    @media (max-width: 749px) {
+      .image-with-text { grid-template-columns: 1fr; text-align: center; }
+    }
+
+    .image-with-text__media img {
+      width: 100%;
+      height: auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 1.2rem 3.2rem;
+      background: rgb(var(--color-foreground));
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      border-radius: 0;
+      transition: all 0.25s;
+    }
+
+    .button:hover {
+      background: var(--color-accent);
+    }
+
+    .vmcv-section {
+      padding: 6rem 0 8rem;
+      text-align: center;
+    }
+
+    .vmcv-title-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5rem 4rem;
+      max-width: 1400px;
+      margin: 0 auto 5rem;
+      text-align: center;
+    }
+
+    .vmcv-title-item {
+      font-family: var(--font-heading-family);
+      font-size: 2.8rem;
+      color: #000;
+      font-weight: 400;
+    }
+
+    .vmcv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5rem 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1023px) {
+      .vmcv-title-grid,
+      .vmcv-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+      }
+    }
+
+    .vmcv-card {
+      padding: 2.5rem 2rem 3rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 420px;
+    }
+
+    .vmcv-icon {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 1.8rem;
+    }
+
+    .vmcv-card h3 {
+      font-family: var(--font-heading-family);
+      font-size: 2.2rem;
+      margin: 0 0 1.2rem;
+      color: var(--color-accent);
+    }
+
+    .vmcv-card p,
+    .vmcv-card ul {
+      font-size: 1.55rem;
+      line-height: 1.7;
+      color: #444;
+      margin: 0;
+    }
+
+    .vmcv-card ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .vmcv-card ul li {
+      margin-bottom: 0.8rem;
+    }
+
+    .product-grid {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 2.5rem;
+      padding: 4rem 0 2rem;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: #c9a96e #f5f5f5;
+      justify-content: center;
+    }
+
+    .product-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .product-grid::-webkit-scrollbar-track {
+      background: #f5f5f5;
+    }
+
+    .product-grid::-webkit-scrollbar-thumb {
+      background: #c9a96e;
+      border-radius: 4px;
+    }
+
+    .card {
+      flex: 0 0 320px;
+      scroll-snap-align: start;
+      background: white;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
+
+    .card__media img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .card__content {
+      padding: 1.6rem;
+      text-align: center;
+    }
+
+    .card__heading {
+      font-family: var(--font-heading-family);
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .price {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--color-accent);
+    }
+
+    .footer {
+      background: #111111;
+      color: #dddddd;
+      padding: 60px 0 40px;
+      font-family: 'Figtree', sans-serif;
+    }
+
+    .footer h3 {
+      color: #ffffff;
+      font-family: var(--font-heading-family);
+      font-size: 1.9rem;
+      margin-bottom: 1.4rem;
+      letter-spacing: 0.5px;
+    }
+
+    .footer a {
+      color: #c9a96e;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-wrapper">
+    <header class="header">
+        <a href="/index.html" class="header__logo" style="display: flex; align-items: center; gap: 1rem; text-decoration: none;">
+        <img src="logo/z7558821033918_ffeefa9d7bb4e5c7e3afdffffbafd3ad.jpg" alt="INFIMITY Logo" class="header__logo-img" style="height: 48px; width: auto;">
+        <img src="logo/z7559088668056_c46327d81acc71362160bbaaef98943d.jpg" alt="Infimity Text" style="height: 36px; width: auto; object-fit: contain;">
+        </a>
+
+    <nav class="header__nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="/catalog/index.html">Catalog</a>
+      <a href="/contact/index.html">Contact</a>
+      <a href="/about-us/index.html">About us</a>
+    </nav>
+
+      <div class="header__icons">
+        <a href="/search" class="header__icon" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </a>
+        <a href="/account" class="header__icon" aria-label="Tài khoản">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+        <a href="/cart" class="header__icon" aria-label="Giỏ hàng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+  </div>
+
+  <div class="poster-container">
+    <img src="web/I.png" class="poster-banner" loading="eager">
+  </div>
+
+  <main id="MainContent">
+
+    <div class="image-with-text page-width">
+      <div class="image-with-text__media">
+        <img src="web/z7502185102608_2067ddf77299b47d2a115f44d4dbc9cd.jpg" alt="...." loading="eager">
+      </div>
+      <div class="image-with-text__content">
+        <h2 class="h1">Bộ sưu tập mới nhất</h2>
+        <p style="margin: 1.6rem 0; font-size: 1.7rem; opacity: 0.8;">
+        </p>
+        <a href="/collections/all" class="button">Mua ngay</a>
+      </div>
+    </div>
+
+    <div class="vmcv-section page-width">
+      <div class="vmcv-title-grid">
+        <div class="vmcv-title-item">Vision</div>
+        <div class="vmcv-title-item">Mission</div>
+        <div class="vmcv-title-item">Core Values</div>
+      </div>
+
+      <div class="vmcv-grid">
+        <div class="vmcv-card">
+          <img src="https://img.icons8.com/ios-filled/100/000000/binoculars.png" alt="Vision Icon" class="vmcv-icon">
+          <h3>Vision</h3>
+          <p>To redefine time through craftsmanship, technology, and timeless design.</p>
+        </div>
+
+        <div class="vmcv-card">
+          <img src="https://img.icons8.com/ios-filled/100/000000/target.png" alt="Mission Icon" class="vmcv-icon">
+          <h3>Mission</h3>
+          <p>To provide high-quality Swiss watches at accessible prices, delivering exceptional customer service and a luxurious shopping experience rooted in precision and reliability.</p>
+        </div>
+
+        <div class="vmcv-card">
+          <img src="https://img.icons8.com/ios-filled/100/000000/diamond.png" alt="Core Values Icon" class="vmcv-icon">
+          <h3>Core Values</h3>
+          <ul>
+            <li><strong>Humanity</strong> – Technology serves people.</li>
+            <li><strong>Excellence</strong> – Precision in every detail.</li>
+            <li><strong>Integrity</strong> – Honest and transparent.</li>
+            <li><strong>Trust</strong> – Promises we keep.</li>
+            <li><strong>Innovation</strong> – Think beyond limits.</li>
+            <li><strong>Speed</strong> – Act fast, improve faster.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <section class="product-grid page-width">
+      <div class="card">
+        <div class="card__media">
+          <img src="web/z7502185112993_ce3ee27bcd586e7441c45cb77befc512.jpg" alt="Infimity Watch" loading="eager">
+        </div>
+        <div class="card__content">
+          <h3 class="card__heading">Infimity Watch</h3>
+          <div class="price">6.500.000$</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__media">
+          <img src="web/z7502189371682_772ab15f74cbd19a8dbcfa1663e7cd0e.jpg" alt="Infimity Watch" loading="eager">
+        </div>
+        <div class="card__content">
+          <h3 class="card__heading">Infimity Watch</h3>
+          <div class="price">6.500.000$</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__media">
+          <img src="web/z7502185128062_905072673dea9253603180973a432f0c.jpg" alt="Infimity Watch" loading="eager">
+        </div>
+        <div class="card__content">
+          <h3 class="card__heading">Infimity Watch</h3>
+          <div class="price">6.500.000$</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__media">
+          <img src="web/z7502189371660_b03351000aa3c121da515ba57fe52a7d.jpg" alt="Infimity Watch" loading="eager">
+        </div>
+        <div class="card__content">
+          <h3 class="card__heading">Infimity Watch</h3>
+          <div class="price">6.500.000$</div>
+        </div>
+      </div>
+    </section>
+<!-- Thêm section này NGAY SAU </section> của product-grid (sau phần 4 card sản phẩm) -->
+
+<section class="benefits-section page-width" style="padding: 4rem 0; text-align: center;">
+  <div class="benefits-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem;">
+    <div class="benefit-card" style="padding: 2rem 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+      <div class="benefit-icon" style="font-size: 3rem; margin-bottom: 1rem;">⛟</div>
+      <h4 style="margin: 0.5rem 0; font-size: 1.4rem; font-weight: 600;">Free Shipping</h4>
+      <p style="font-size: 1.1rem; color: #555; margin: 0;">Delivery within 3 days</p>
+    </div>
+
+    <div class="benefit-card" style="padding: 2rem 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+      <div class="benefit-icon" style="font-size: 3rem; margin-bottom: 1rem;">𖠩</div>
+      <h4 style="margin: 0.5rem 0; font-size: 1.4rem; font-weight: 600;">Attractive Gifts</h4>
+      <p style="font-size: 1.1rem; color: #555; margin: 0;">Many hot promotional offers</p>
+    </div>
+
+    <div class="benefit-card" style="padding: 2rem 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+      <div class="benefit-icon" style="font-size: 3rem; margin-bottom: 1rem;">✔</div>
+      <h4 style="margin: 0.5rem 0; font-size: 1.4rem; font-weight: 600;">Quality Guaranteed</h4>
+      <p style="font-size: 1.1rem; color: #555; margin: 0;">Products have been verified</p>
+    </div>
+
+    <div class="benefit-card" style="padding: 2rem 1.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+      <div class="benefit-icon" style="font-size: 3rem; margin-bottom: 1rem;">☎</div>
+      <h4 style="margin: 0.5rem 0; font-size: 1.4rem; font-weight: 600;">Hotline: 0937.877.778</h4>
+      <p style="font-size: 1.1rem; color: #555; margin: 0;">24/7 support service</p>
+    </div>
+  </div>
+</section>
+  </main>
+
+  <footer class="footer">
+    <div class="page-width" style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px 60px; text-align: center;">
+
+        <div>
+          <h3 style="color: #ffffff; font-family: var(--font-heading-family); font-size: 1.9rem; margin-bottom: 1.4rem; letter-spacing: 0.5px;">
+            Hỗ trợ sửa chữa
+          </h3>
+          <p style="font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: 500;">
+            Hộ Kinh Doanh Đồng Hồ Phố
+          </p>
+          <p style="font-size: 0.95rem; line-height: 1.65; opacity: 0.85;">
+            MST: 8838658497-001<br>
+            do UBND Quận Đống Đa cấp ngày 14/09/2023
+          </p>
+        </div>
+
+        <div>
+          <h3 style="color: #ffffff; font-family: var(--font-heading-family); font-size: 1.9rem; margin-bottom: 1.4rem; letter-spacing: 0.5px;">
+            Địa chỉ
+          </h3>
+          <address style="font-style: normal; font-size: 1.05rem; line-height: 1.7;">
+            258 Đường Láng,<br>
+            Phường Thịnh Quang,<br>
+            Quận Đống Đa, Hà Nội
+          </address>
+        </div>
+
+        <div>
+          <h3 style="color: #ffffff; font-family: var(--font-heading-family); font-size: 1.9rem; margin-bottom: 1.4rem; letter-spacing: 0.5px;">
+            Liên hệ
+          </h3>
+          <p style="font-size: 1.05rem; line-height: 1.8;">
+            Hotline: <a href="tel:0961345888" style="color: #c9a96e; text-decoration: none;">0961 345 888</a><br>
+            Email: <a href="mailto:donghophotho2015@gmail.com" style="color: #c9a96e; text-decoration: none;">donghophotho2015@gmail.com</a>
+          </p>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(201,169,110,0.12); text-align: center; font-size: 0.92rem; opacity: 0.65;">
+        ©DoDoanMinhThang.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = [
+        document.querySelector('.image-with-text'),
+        document.querySelector('.vmcv-section')
+      ];
+
+      sections.forEach((section, index) => {
+        if (section) {
+          setTimeout(() => {
+            section.classList.add('visible');
+          }, 100 + index * 400);
+        }
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      const productGrid = document.querySelector('.product-grid');
+      if (productGrid) observer.observe(productGrid);
+
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add('visible');
+        }, 800 + index * 150);
+      });
+    });
+  </script>
+
+</body>
+</html>
